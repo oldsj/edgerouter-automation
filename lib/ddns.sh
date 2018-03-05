@@ -1,16 +1,16 @@
-#!/bin/bash
-source /opt/vyatta/etc/functions/script-template
-
-dyndnsservice=$1
-host=$2
-username=$3
-password=$4
+#!/bin/vbash
+ddns_service=$1
+ddns_host=$2
+ddns_username=$3
+ddns_password=$4
 wan_port=$5
 
+source /opt/vyatta/etc/functions/script-template
+
 configure
-set service dns dynamic interface eth0 service <dyndnsservice> host-name <host>
-set service dns dynamic interface eth0 service <dyndnsservice> login <username>
-set service dns dynamic interface eth0 service <dyndnsservice> password <password>
+set service dns dynamic interface $wan_port service $ddns_service host-name $ddns_host
+set service dns dynamic interface $wan_port service $ddns_service login $ddns_username
+set service dns dynamic interface $wan_port service $ddns_service password $ddns_password
+
 commit
-save
 exit
