@@ -18,26 +18,33 @@ fi
 
 source $vars
 
-if [ -z ${hostname+x} ]; then 
-    echo "var hostname is unset";
-    exit 1;
-elif [ -z ${mgmt_ip+x} ]; then 
-    echo "var mgmt is unset";
-    exit 1;
-elif [ -z ${wan_port+x} ]; then 
-    echo "var wan_port is unset";
-    exit 1;
-elif [ -z ${username+x} ]; then 
-    echo "var username is unset";
-    exit 1;
-elif [ -z ${fqdn+x} ]; then 
-    echo "var fqdn is unset";
-    exit 1;
+if ! [ -z $base_role+x} ]; then 
+    if [ -z ${mgmt_ip+x} ]; then 
+        echo "var mgmt_ip is unset";
+        exit 1;
+    elif [ -z ${hostname+x} ]; then 
+        echo "var hostname is unset";
+        exit 1;
+    elif [ -z ${domain+x} ]; then 
+        echo "var domain is unset";
+        exit 1;
+    elif [ -z ${wan_port+x} ]; then 
+        echo "var wan_port is unset";
+        exit 1;
+    fi
 fi
 
-if ! [ -z ${bootstrap_role+x} ]; then 
+if ! [ -z ${upgrade_firmware_role+x} ]; then 
     if [ -z ${firmware_file+x} ]; then 
         echo "var firmware_file is unset";
+        exit 1;
+
+    fi
+fi
+
+if ! [ -z ${admin_user_role+x} ]; then 
+    if [ -z ${username+x} ]; then 
+        echo "var username is unset";
         exit 1;
     elif [ -z ${ssh_private_key+x} ]; then 
         echo "var ssh_private_key is unset";
@@ -62,8 +69,4 @@ if ! [ -z ${ddns_role+x} ]; then
         echo "var ddns_password is unset";
         exit 1;
     fi
-fi
-
-if ! [ -z ${letsencrypt_role+x} ]; then
-    echo lets enc
 fi

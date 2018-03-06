@@ -1,5 +1,6 @@
 #!/bin/vbash
 fqdn=$1
+mgmt_ip=$2
 
 export PATH=$PATH:/opt/vyatta/bin:/opt/vyatta/sbin
 export vyatta_sbindir=/opt/vyatta/sbin
@@ -10,7 +11,7 @@ COMMIT=/opt/vyatta/sbin/my_commit
 SAVE=/opt/vyatta/sbin/vyatta-save-config.pl
 LOADKEY=/opt/vyatta/sbin/vyatta-load-user-key.pl
 
-#Setup config session
+### Setup config session
 session_env=$($SHELL_API getSessionEnv $PPID)
   if [ $? -ne 0 ]; then
     echo "An error occured while configuring session environment!"
@@ -23,21 +24,29 @@ $SHELL_API setupSession
     exit 0
   fi
 
-# Check if patch is installed, install if not adding needed Debian repositories
-command -v patch >/dev/null 2>&1 || { 
-    $SET system package repository wheezy components 'main contrib'
-    $SET system package repository wheezy distribution wheezy 
-    $SET system package repository wheezy url http://http.us.debian.org/debian
-    $COMMIT
-    sudo apt-get -y update
-    sudo apt-get -y install patch
-}
+### Configuration
+sudo mv /tmp/acme.sh /config/.acme.sh/acme.sh
+sudo mv /tmp/renew.acme.sh /config/scripts/renew.acme.sh
+sudo chmod 755 /config/.acme.sh/acme.sh /config/scripts/renew.acme.sh
+sudo chown -R root:root /config/.acme.sh /config/scripts/renew.acme.sh
+sudo chmod -R 755 /config/.acme.sh /config/scripts/renew.acme.sh
 
-sudo vbash /config/letsencrypt-edgemax/install.sh -t $fqdn
-#Tear down the session
+$SET system static-host-mapping host-name $fqdn inet $mgmt_ip
+$SET service gui cert-file /config/ssl/server.pem
+$SET service gui ca-file /config/ssl/ca.pem
+$SET system task-scheduler task renew.acme executable path /config/scripts/renew.acme.sh
+$SET system task-scheduler task renew.acme interval 1d
+$SET system task-scheduler task renew.acme executable arguments "-d $fqdn"
+
+$COMMIT
+
+# Regenerate the lighttpd configuration and restart it to reflect our patches
+  #echo Regenerating lighttpd configuration files...
+  #sudo vbash /usr/sbin/ubnt-gen-lighty-conf.sh
+
+### Tear down the session
 $SHELL_API teardownSession
   if [ $? -ne 0 ]; then
     echo "An error occured while tearing down the session!"
     exit 0
   fi
-

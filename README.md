@@ -9,5 +9,9 @@ ssh keygen
  ssh-agent bash
   ssh-add $ssh_private_key
 
-To use the letsencrypt role, be sure to have a DNS entry to the EdgeRouter's public IP. The dynamic DNS role is configured to run before letsencrypt to be sure DNS works for those with a dynamic WAN IP
+To use the letsencrypt role, be sure to have a DNS entry to the EdgeRouter's public IP. The dynamic DNS role is configured to run before letsencrypt to be sure DNS works for those with a dynamic WAN IP.
+Make sure dynamic DNS is configured with your domain provider first.
 
+If you get a ":Verify error:DNS problem: NXDOMAIN..." error your DNS might still br propogating throughout DNS. See if you can ping your ddns domain.
+
+Upgrade firmware role can also be used to downgrade, however this script isn't guaranteed to work with any version other than v1.10.0.5056246
