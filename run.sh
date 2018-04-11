@@ -5,7 +5,7 @@ source ./lib/functions.sh
 # Execute roles if enabled in vars.sh
 if ! [ -z ${base_role+x} ]; then
     echo ***Running base role...
-    runRemote ./lib/configureWan.sh $wan_port >/dev/null
+    runRemote ./lib/base_role.sh $wan_port >/dev/null
 fi
 if ! [ -z ${upgrade_firmware_role+x} ]; then
     echo ***Running upgrade firmware role...
