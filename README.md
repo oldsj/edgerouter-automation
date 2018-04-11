@@ -50,14 +50,7 @@ Make sure dynamic DNS is configured with your domain provider first.
 
 Compatible services are:
 
-dnspark
-dyndns       
-namecheap    
-zoneedit     
-dslreports   
-easydns      
-sitelutions
-afraid (as of OS Version 1.3)
+dnspark, dyndns, namecheap, zoneedit, dslreports, easydns, sitelutions, afraid (as of OS Version 1.3)
 
 Configure your ddns provider's credentials. For Namecheap, ddns_host is your subdomain, ddns_username is the root domain, and ddns_password is generated in your ddns settings at Namecheap, it is not your Namecheap login credentials.
 
