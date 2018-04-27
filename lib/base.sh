@@ -8,8 +8,8 @@ lan_net=$6
 lan_mask=$7
 lan_dhcp_start=$8
 lan_dhcp_stop=$9
-ext_dns1=$10
-ext_dns2=$11
+ext_dns1=${10}
+ext_dns2=${11}
 
 source /opt/vyatta/etc/functions/script-template
 
@@ -27,9 +27,11 @@ set service dns forwarding name-server $ext_dns1
 set service dns forwarding name-server $ext_dns2
 set service dns forwarding listen-on $lan_port
 set service dns forwarding cache-size 400
-set service dns forwarding except-interface $wan_port
+set service dns forwarding system
+
 set system static-host-mapping host-name $hostname inet $lan_ip
 
+delete system static-host-mapping host-name $hostname inet 127.0.1.1
 delete service dns forwarding listen-on $wan_port
 delete service dns forwarding options listen-address=
 
