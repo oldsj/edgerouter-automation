@@ -27,6 +27,10 @@ set service dns forwarding name-server $ext_dns1
 set service dns forwarding name-server $ext_dns2
 set service dns forwarding listen-on $lan_port
 set service dns forwarding cache-size 400
+set service dns forwarding except-interface $wan_port
+set system static-host-mapping host-name $hostname inet $lan_ip
+
+delete service dns forwarding listen-on $wan_port
 delete service dns forwarding options listen-address=
 
 set service dhcp-server shared-network-name LAN subnet $lan_net$lan_mask domain-name $domain

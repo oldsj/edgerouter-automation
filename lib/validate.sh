@@ -21,9 +21,6 @@ if ! [ -z $base_role+x} ]; then
     if [ -z ${admin_username+x} ]; then 
         echo "var admin_username is unset";
         exit 1;
-    elif [ -z ${ssh_private_key+x} ]; then 
-        echo "var ssh_private_key is unset";
-        exit 1;
     elif [ -z ${ssh_public_key+x} ]; then 
         echo "var ssh_public_key is unset";
         exit 1;
