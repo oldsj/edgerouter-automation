@@ -20,6 +20,9 @@ All configuration is located centrally in vars.sh. It is organized by roles like
 ### base_role 
 Configure the management IP wan/lan ports, hostname and domain name. The hostname and domain name set here are also referenced from other roles like letsencrypt to issue certificates.
 
+If you change lan_net from the default of 192.168.1.1/24, you will break your connection to the router and need to update the interface on the PC with the new network address.
+Just update your settings and re-run ./run.sh
+
 ### upgrade_firmware_role
 Place the firmware you'd like to run in /files and configure the firmware_files variable to its location.
 
@@ -55,6 +58,7 @@ dnspark, dyndns, namecheap, zoneedit, dslreports, easydns, sitelutions, afraid (
 Configure your ddns provider's credentials. For Namecheap, ddns_host is your subdomain, ddns_username is the root domain, and ddns_password is generated in your ddns settings at Namecheap, it is not your Namecheap login credentials.
 
 ### lets_encrypt_role
+This role uses https://github.com/j-c-m/ubnt-letsencrypt to 
 To use the letsencrypt role, be sure to have a DNS entry to the EdgeRouter's public IP. The dynamic DNS role is configured to run before letsencrypt to be sure DNS works for those with a dynamic WAN IP.
 
 If you get a ":Verify error:DNS problem: NXDOMAIN..." error your DNS might still be propagating throughout DNS. See if when you ping your configured FQDN, it resolves to a public IP. If not you'll need to wait.
@@ -68,6 +72,14 @@ Configure the IPsec credentials you would like for clients to use to authenticat
 client_ip_pool_start and stop covers the range of IP addresses that will be handed out to clients.
 
 ## Running
+Connect the EdgeRouter port eth0 to a port on your PC statically configured with an IP like 192.168.1.10/24
+
+Make sure your PC isn't connected to any other 192.168.1.0/24 network.
+
+If you run base_role and chose to configure a subnet and management IP other than default, you will need to update your PC's network adapter settings.
+
+Once the script has run, be sure to reboot the router if this is the first run to load the new firmware and enable hardware offloading.
+
 ### Linux / macOS / WSL
 ```bash
 cd edgerouter-automation

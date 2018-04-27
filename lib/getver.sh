@@ -4,4 +4,4 @@ source /opt/vyatta/etc/functions/script-template
 source /etc/bash_completion.d/vyatta-cfg
 source /etc/bash_completion.d/vyatta-op
 
-show version
+show system image | grep "default boot"
