@@ -22,8 +22,7 @@ def configure(net_connect):
 
     f'set system static-host-mapping host-name {hostname} inet {lan_ip}',
 
-    f'set system offload hwnat enable',
-    f'set system offload ipsec enable'
+    f'set system offload hwnat enable'
   ]
 
   config_commands.append('commit')
