@@ -1,10 +1,15 @@
 #!/usr/bin/python3
 import netmiko
-from variables import *
-import lib.base as base
-import lib.bootstrap as bootstrap
 import sys
 import traceback
+import yaml
+from jinja2 import Environment, FileSystemLoader, Template
+
+ENV = Environment(loader=FileSystemLoader('./config'))
+
+with open("variables.yml") as variables:
+    variables =  yaml.load(variables)
+
 
 er_bootstrap = {
   'device_type':  'vyos',
@@ -17,55 +22,61 @@ er_bootstrap = {
 
 er = {
   'device_type':  'vyos',
-  'ip':           lan_ip,
-  'username':     admin_username,
+  '#ip':           variables.get('lan_ip'),
+  'username':     variables.get('admin_username'),
   'allow_agent':  "True",
   'keepalive':    2,
   'timeout':      2.0
 }
 
-try:
-  net_connect = netmiko.ConnectHandler(**er)
-  base.configure(net_connect)
-  net_connect.disconnect()
-  net_connect = netmiko.ConnectHandler(**er)
-  base.firewall(net_connect)
-  net_connect.disconnect()
+
+base = ENV.get_template("base.j2")
+
+print (type(base))
+
+# try:
+#   net_connect = netmiko.ConnectHandler(**er)
+#   base.configure(net_connect)
+#   net_connect.disconnect()
+#   net_connect = netmiko.ConnectHandler(**er)
+#   base.firewall(net_connect)
+#   net_connect.disconnect()
   
-  print("Finished, saving configuration to boot...")
-  #net_connect.send_command("save")
-except (netmiko.ssh_exception.NetMikoTimeoutException, 
-  netmiko.ssh_exception.NetMikoAuthenticationException):
+#   print("Finished, saving configuration to boot...")
+#   #net_connect.send_command("save")
 
-  try:
-    # TODO: figure out why disconnect() is needed
-    print("Default configuration detected. Bootstrapping...")
+# # Connecting with **er will fail on first run, except clause will bootstrap 
+# except (netmiko.ssh_exception.NetMikoTimeoutException, 
+#   netmiko.ssh_exception.NetMikoAuthenticationException):
 
-    net_connect = netmiko.ConnectHandler(**er_bootstrap)
-    bootstrap.load_key(net_connect)
-    net_connect.disconnect()
+#   try:
+#     # TODO: figure out why disconnect() is needed
+#     print("Default configuration detected. Bootstrapping...")
 
-    net_connect = netmiko.ConnectHandler(**er_bootstrap)
-    bootstrap.configure(net_connect)
-    net_connect.disconnect()
-    print("Bootstrap completed succesfully, update your NIC settings now if " + 
-      "needed and re-run script.")
+#     with open('config/bootstrap.j2') as file_:
+#       template = Template(file_.read())
+#     template.render(name='John')
+  
+#     print("Bootstrap completed succesfully, update your NIC settings now if " + 
+#       "needed and re-run script.")
 
-  except (netmiko.ssh_exception.NetMikoTimeoutException):
-    print("Unable to boostrap, make sure it's pingable at 192.168.1.1 and in " +
-      "the factory default state.")
+  
+#   except (netmiko.ssh_exception.NetMikoTimeoutException, 
+#     netmiko.ssh_exception.NetMikoAuthenticationException)
+#     print("Unable to boostrap, make sure it's pingable at 192.168.1.1 and in " +
+#       "the factory default state.")
 
-  except KeyboardInterrupt:
-    print("Exiting")
+#   except KeyboardInterrupt:
+#     print("Exiting")
 
-  except:
-    print("Unexpected error:", sys.exc_info()[0])
-    traceback.print_exc()
+#   except:
+#     print("Unexpected error:", sys.exc_info()[0])
+#     traceback.print_exc()
 
-except KeyboardInterrupt:
-  print("Exiting")
+# except KeyboardInterrupt:
+#   print("Exiting")
 
-except:
-  print("Unexpected error:", sys.exc_info()[0])
-  traceback.print_exc()
+# except:
+#   print("Unexpected error:", sys.exc_info()[0])
+#   traceback.print_exc()
 

@@ -1,7 +1,9 @@
 from paramiko import SSHClient, AutoAddPolicy
 from scp import SCPClient
 import os
-from variables import *
+
+with open("variables.yml") as variables:
+    variables =  yaml.load(variables)
 
 def createSSHClient(server, port, user, password):
     client = SSHClient()
@@ -12,9 +14,9 @@ def createSSHClient(server, port, user, password):
 
 def load_key(net_connect):
   home = os.path.expanduser("~")
-  ssh_public_key_path = os.path.join(home, '.ssh', ssh_public_key)
+  ssh_public_key_path = os.path.join(home, '.ssh', variables.get('ssh_public_key')
 
-  dest = f'/tmp/{ssh_public_key}'
+  dest = f'/tmp/{variables.get('ssh_public_key')}'
   ssh = createSSHClient('192.168.1.1', '22', 'ubnt', 'ubnt')
   scp = SCPClient(ssh.get_transport())
 
@@ -22,30 +24,30 @@ def load_key(net_connect):
   scp.put(ssh_public_key_path, dest)
 
   load_key_commands = [
-    f'set system login user {admin_username} authentication encrypted-password {password_hash}',
-    f'set system login user {admin_username} level admin',
+    f'set system login user {variables.get('admin_username')} authentication encrypted-password {variables.get('password_hash')}',
+    f'set system login user {variables.get('admin_username')} level admin',
     f'commit',
-    f'loadkey {admin_username} /tmp/{ssh_public_key}'
+    f'loadkey {variables.get('admin_username')} /tmp/{variables.get('ssh_public_key')}'
   ]
   
-  print(f"Loading SSH key for {admin_username}...")
+  print(f"Loading SSH key for {variables.get('admin_username')}...")
   print(net_connect.send_config_set(load_key_commands))
 
 def configure(net_connect):
 
   config_commands = [
-    f'set interfaces switch switch0 address {lan_ip}{lan_mask}',
+    f'set interfaces switch switch0 address {variables.get('lan_ip')}{variables.get('lan_mask')}',
     f'set interfaces switch switch0 description "LAN1"',
     f'delete interfaces ethernet eth0 address',
 
-    f'set service dhcp-server shared-network-name LAN subnet {lan_net}{lan_mask} domain-name {domain}',
-    f'set service dhcp-server shared-network-name LAN subnet {lan_net}{lan_mask} default-router {lan_ip}',
-    f'set service dhcp-server shared-network-name LAN subnet {lan_net}{lan_mask} dns-server {lan_ip}',
-    f'set service dhcp-server shared-network-name LAN subnet {lan_net}{lan_mask} start {lan_dhcp_start} stop {lan_dhcp_stop}',
+    f'set service dhcp-server shared-network-name LAN subnet {variables.get('lan_net')}{variables.get('lan_mask')} domain-name {variables.get('domain'}',
+    f'set service dhcp-server shared-network-name LAN subnet {variables.get('lan_net')}{variables.get('lan_mask')} default-router {variables.get('lan_ip')}',
+    f'set service dhcp-server shared-network-name LAN subnet {variables.get('lan_net')}{variables.get('lan_mask')} dns-server {variables.get('lan_ip')}',
+    f'set service dhcp-server shared-network-name LAN subnet {variables.get('lan_net')}{variables.get('lan_mask')} start {variables.get('lan_dhcp_start')} stop {variables.get('lan_dhcp_stop')}',
     f'set service dhcp-server dynamic-dns-update enable true'
   ]
 
-  for interface in lan_ports:
+  for interface in variables.get('lan_ports'):
     config_commands.append(f'set interfaces switch switch0 switch-port interface {interface}')
   
   config_commands.append('commit')
