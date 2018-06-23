@@ -7,8 +7,15 @@ As such, speed is not a primary goal of the project. It's not meant to configure
 
 # Getting started
 * Fork and clone the repository locally.
+* Install jinja2 and netmiko with pip
+      
+  ```bash
+  pip3 install -r requirements.txt
+  ```
+
 * Go to https://www.ubnt.com/download/edgemax to get the latest firmware and place it in
-the files folder.
+the firmware folder.
+
 * Copy examples/variables.ymlto the root of the folder along side run.py. The .gitignore ignores /variables.yml so that you can place private information there without it getting stored in git.
 
 ## Configuration
