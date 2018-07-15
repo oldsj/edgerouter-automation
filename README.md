@@ -1,21 +1,27 @@
-EdgeRouter Automation is a set of bash scripts to automate provisioning and the deployment of common features of Ubiquity's EdgeRouter X routers.
+# *** NOTE this is not working yet, and the documentation is still based off of the bash branch ***
 
-I chose write it in pure bash vs using a proper configuration management tool like Ansible or SaltStack because I didn't want to require any third party tool setup, and also wanted to learn a bit more bash.
+EdgeRouter Automation is a set of Python scripts to automate provisioning and the deployment of common features of Ubiquity's EdgeRouter X routers.
 
-Being pure bash, all it takes to run it is to ./run.sh on any platform that has bash installed (that includes you too now Windows10).
-It aims to be idempotent, being able to be ran more than once against the same router without error or misconfiguration. 
+The project aims to be idempotent, being able to be ran more than once against the same router without error or misconfiguration. 
 
 This project is targeted at advanced home users who want to automate their home network configuration and be able to store it's state in a git repository.
 As such, speed is not a primary goal of the project. It's not meant to configure 1000's or even 100's of devices. For that I would check out SaltStack, napalm-salt and [napalm-vyos](https://github.com/napalm-automation-community/napalm-vyos) to manage a fleet of EdgeRouters.
 
 # Getting started
 * Fork and clone the repository locally.
+* Install jinja2 and netmiko with pip
+      
+  ```bash
+  pip3 install -r requirements.txt
+  ```
+
 * Go to https://www.ubnt.com/download/edgemax to get the latest firmware and place it in
-the files folder.
-* Copy examples/vars.sh to the root of the folder along side run.sh. The .gitignore ignores /vars.sh so that you can place private information there without it getting stored in git.
+the firmware folder.
+
+* Copy examples/variables.ymlto the root of the folder along side run.py. The .gitignore ignores /variables.yml so that you can place private information there without it getting stored in git.
 
 ## Configuration
-All configuration is located centrally in vars.sh. It is organized by roles like Ansible, so if you do not wish to configure a top level role like dynamic DNS (ddns), just comment out ddns_role=.
+All configuration is located centrally in variables.yml. It is organized by roles like Ansible, so if you do not wish to configure a top level role like dynamic DNS (ddns), just comment out ddns_role=.
 
 The example vars.sh as written will configure an administrator with a name of 'oldsj', a password of 'test' (hashed as SHA-512), configure SSH login with the provided public key, and set the hostname to er01, domain to example.com. Eth4 is configured as the WAN port as a DHCP client, eth0 is a single LAN port configured as a DHCP server. Static  DHCP reservations are resolvable in DNS as well as the router's hostname, all under the configured domain variable. 
 NAT is configured to masquerade to $wan_port.

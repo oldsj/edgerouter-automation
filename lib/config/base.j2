@@ -1,0 +1,14 @@
+# delete the default ubnt user now that we're bootstrapped
+delete system login user ubnt
+set interfaces ethernet {{ variables['wan_port'] }} address dhcp
+set interfaces ethernet {{ variables['wan_port'] }} description "WAN1"
+set system host-name {{ variables['hostname'] }}
+set system domain-name {{ variables['domain'] }}
+set system name-server 127.0.0.1
+set service dns forwarding name-server {{ variables['ext_dns1'] }}
+set service dns forwarding name-server {{ variables['ext_dns2'] }}
+set service dns forwarding listen-on switch0
+set service dns forwarding cache-size 400
+set service dns forwarding system
+set system static-host-mapping host-name {{ variables['hostname'] }} inet {{ variables['lan_ip'] }}
+set system offload hwnat enable
