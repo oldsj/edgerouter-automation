@@ -1,3 +1,5 @@
+# *** NOTE this is not working yet, and the documentation is still based off of the bash branch ***
+
 EdgeRouter Automation is a set of Python scripts to automate provisioning and the deployment of common features of Ubiquity's EdgeRouter X routers.
 
 The project aims to be idempotent, being able to be ran more than once against the same router without error or misconfiguration. 
