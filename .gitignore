@@ -1,5 +1,5 @@
-variables.py
-vars.sh
+variables.yml
+!examples/*
 
 # Compiled source #
 ###################
