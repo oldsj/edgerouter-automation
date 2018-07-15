@@ -1,5 +1,6 @@
 import lib.functions as functions
 import lib.bootstrap as bootstrap
+import lib.upgrade_firmware as upgrade_firmware
 
 import yaml
 import netmiko
@@ -44,8 +45,14 @@ except (netmiko.ssh_exception.NetMikoTimeoutException,
     net_connect = netmiko.ConnectHandler(**er_bootstrap)
 
     print("Default configuration detected. Bootstrapping...")
-    bootstrap.load_key(net_connect, variables)
-    bootstrap.configure(net_connect, variables)
+    
+    print("Upgrading firmware.")
+    upgrade_firmware.upgrade_firmware(net_connect, variables)
+
+    # print("Loading SSH Key.")
+    # bootstrap.load_key(net_connect, variables)
+    # print("Loading base LAN config")
+    # bootstrap.configure(net_connect, variables)
 
     print("Bootstrap completed succesfully, update your NIC settings now if " + 
       "needed and re-run script.")
@@ -53,7 +60,7 @@ except (netmiko.ssh_exception.NetMikoTimeoutException,
   
   except (netmiko.ssh_exception.NetMikoTimeoutException, 
     netmiko.ssh_exception.NetMikoAuthenticationException):
-    print("Unable to boostrap, make sure it's pingable at 192.168.1.1 and in " +
+    print("Unable to boostrap, make sure the router is pingable at 192.168.1.1 and in " +
       "the factory default state.")
 
   except KeyboardInterrupt:

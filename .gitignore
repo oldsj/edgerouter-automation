@@ -1,6 +1,5 @@
 variables.py
 vars.sh
-firmware/
 
 # Compiled source #
 ###################
@@ -127,8 +126,6 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
-lib64/
 parts/
 sdist/
 var/

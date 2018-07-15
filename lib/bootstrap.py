@@ -1,16 +1,10 @@
-from lib.functions import template_config
+from lib.functions import template_config, createSSHClient
 
 from paramiko import SSHClient, AutoAddPolicy
 from scp import SCPClient
 import os
 import yaml
 
-def createSSHClient(server, port, user, password):
-    client = SSHClient()
-    client.load_system_host_keys()
-    client.set_missing_host_key_policy(AutoAddPolicy())
-    client.connect(server, port, user, password)
-    return client
 
 def load_key(net_connect, variables):
   ssh_public_key = variables['ssh_public_key']
@@ -32,5 +26,5 @@ def load_key(net_connect, variables):
 
 def configure(net_connect, variables):
   print("Configuring LAN network...")
-  net_connect.send_config_set(template_config('bootstrap.j2', variables))
+  net_connect.send_config_set(template_config('lan_base.j2', variables))
   net_connect.send_config_set('commit')

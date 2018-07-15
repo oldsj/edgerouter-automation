@@ -1,0 +1,12 @@
+set interfaces switch switch0 address {{ variables['lan_ip'] }}{{ variables['lan_mask'] }}
+set interfaces switch switch0 description "LAN1"
+delete interfaces ethernet eth0 address
+set service dhcp-server shared-network-name LAN subnet {{ variables['lan_net'] }}{{ variables['lan_mask'] }} domain-name {{ variables['domain'] }}
+set service dhcp-server shared-network-name LAN subnet {{ variables['lan_net'] }}{{ variables['lan_mask'] }} default-router {{ variables['lan_ip'] }}
+set service dhcp-server shared-network-name LAN subnet {{ variables['lan_net'] }}{{ variables['lan_mask'] }} dns-server {{ variables['lan_ip'] }}
+set service dhcp-server shared-network-name LAN subnet {{ variables['lan_net'] }}{{ variables['lan_mask'] }} start {{ variables['lan_dhcp_start'] }} stop {{ variables['lan_dhcp_stop'] }}
+set service dhcp-server dynamic-dns-update enable true
+
+{% for port in variables['lan_ports'] -%}
+set interfaces switch switch0 switch-port interface {{ port }}
+{% endfor %}
