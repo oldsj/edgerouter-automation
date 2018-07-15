@@ -1,1 +1,5 @@
 vars.sh
+!examples/vars.sh
+
+.vscode/
+__pycache__/
