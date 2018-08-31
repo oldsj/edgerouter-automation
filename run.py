@@ -1,5 +1,6 @@
 from lib.functions import *
 import lib.base as base
+import lib.wireguard_client as wireguard_client
 
 import yaml
 import netmiko
@@ -22,7 +23,8 @@ try:
   net_connect = netmiko.ConnectHandler(**er)
 
   base.configure(net_connect, variables)
-
+  wireguard_client.configure(net_connect, variables)
+  
   print("Finished, saving configuration to boot...")
   #net_connect.send_command("save")
 
