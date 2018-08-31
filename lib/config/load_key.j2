@@ -1,5 +1,0 @@
-set system login user {{ variables['admin_username'] }} authentication encrypted-password {{ variables['password_hash'] }}
-set system login user {{ variables['admin_username'] }} level admin
-commit
-loadkey {{ variables['admin_username'] }} /tmp/{{ variables['ssh_public_key'] }}
-commit

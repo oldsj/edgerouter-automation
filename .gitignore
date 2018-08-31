@@ -1,6 +1,6 @@
 variables.yml
 !examples/*
-
+.vscode/
 # Compiled source #
 ###################
 *.com

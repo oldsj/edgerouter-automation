@@ -20,6 +20,12 @@ the firmware folder.
 
 * Copy examples/variables.ymlto the root of the folder along side run.py. The .gitignore ignores /variables.yml so that you can place private information there without it getting stored in git.
 
+## Initial Router Configuration
+* WAN/LAN Wizard
+* Load SSH keys 
+```loadkey admin_username /tmp/er01.pub```
+
+
 ## Configuration
 All configuration is located centrally in variables.yml. It is organized by roles like Ansible, so if you do not wish to configure a top level role like dynamic DNS (ddns), just comment out ddns_role=.
 
