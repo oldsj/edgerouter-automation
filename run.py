@@ -23,12 +23,12 @@ try:
   net_connect = netmiko.ConnectHandler(**er)
 
   base.configure(net_connect, variables)
+  wireguard_client.install_wireguard(net_connect, variables)
   wireguard_client.configure(net_connect, variables)
-  
-  print("Finished, saving configuration to boot...")
-  #net_connect.send_command("save")
 
-# Connecting with **er will fail on first run, except clause will bootstrap 
+  print("Finished, saving configuration to boot...")
+  print(net_connect.send_config_set(["save"]))
+
 except (netmiko.ssh_exception.NetMikoTimeoutException, 
   netmiko.ssh_exception.NetMikoAuthenticationException):
   print(f"Unable to connect to EdgeRouter at {variables['admin_username']}@{variables['device_ip']}")

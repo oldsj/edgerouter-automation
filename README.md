@@ -93,6 +93,15 @@ Configure the IPsec credentials you would like for clients to use to authenticat
 
 client_ip_pool_start and stop covers the range of IP addresses that will be handed out to clients.
 
+## Wireguard Client
+This role configures the router as a Wireguard client. 
+For more info on Wireguard check out https://www.wireguard.com/
+
+* Download the latest vyatta-wireguard release from 
+https://github.com/Lochnair/vyatta-wireguard/releases
+Edgerouter X is e50.
+
+
 ## Running
 Connect the EdgeRouter port eth0 to a port on your PC statically configured with an IP like 192.168.1.10/24
 
