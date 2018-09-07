@@ -22,12 +22,12 @@ er = {
 try:
   net_connect = netmiko.ConnectHandler(**er)
 
-  base.configure(net_connect, variables)
-  wireguard_client.install_wireguard(net_connect, variables)
+  #base.configure(net_connect, variables)
+  #wireguard_client.install_wireguard(net_connect, variables)
   wireguard_client.configure(net_connect, variables)
 
   print("Finished, saving configuration to boot...")
-  print(net_connect.send_config_set(["save"]))
+  #print(net_connect.send_config_set(["save"]))
 
 except (netmiko.ssh_exception.NetMikoTimeoutException, 
   netmiko.ssh_exception.NetMikoAuthenticationException):
