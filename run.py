@@ -1,6 +1,7 @@
 from lib.functions import *
 import lib.base as base
 import lib.wireguard_client as wireguard_client
+import lib.ipsec_server as ipsec_server
 
 import yaml
 import netmiko
@@ -16,7 +17,8 @@ er = {
   'username':     variables['admin_username'],
   'allow_agent':  "True",
   'keepalive':    2,
-  'timeout':      2.0
+  'timeout':      2.0,
+  'verbose':      "True",
 }
 
 try:
@@ -24,7 +26,8 @@ try:
 
   #base.configure(net_connect, variables)
   #wireguard_client.install_wireguard(net_connect, variables)
-  wireguard_client.configure(net_connect, variables)
+  #wireguard_client.configure(net_connect, variables)
+  ipsec_server.configure(net_connect, variables)
 
   print("Finished, saving configuration to boot...")
   #print(net_connect.send_config_set(["save"]))
