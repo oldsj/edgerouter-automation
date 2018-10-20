@@ -1,0 +1,35 @@
+- name: configure ipsec server
+  edgeos_config:
+    lines:
+      - set firewall name WAN_LOCAL rule 30 action accept
+      - set firewall name WAN_LOCAL rule 30 description ike
+      - set firewall name WAN_LOCAL rule 30 destination port 500
+      - set firewall name WAN_LOCAL rule 30 log disable
+      - set firewall name WAN_LOCAL rule 30 protocol udp
+      - set firewall name WAN_LOCAL rule 40 action accept
+      - set firewall name WAN_LOCAL rule 40 description esp
+      - set firewall name WAN_LOCAL rule 40 log disable
+      - set firewall name WAN_LOCAL rule 40 protocol esp
+      - set firewall name WAN_LOCAL rule 50 action accept
+      - set firewall name WAN_LOCAL rule 50 description nat-t
+      - set firewall name WAN_LOCAL rule 50 destination port 4500
+      - set firewall name WAN_LOCAL rule 50 log disable
+      - set firewall name WAN_LOCAL rule 50 protocol udp
+      - set firewall name WAN_LOCAL rule 60 action accept
+      - set firewall name WAN_LOCAL rule 60 description l2tp
+      - set firewall name WAN_LOCAL rule 60 destination port 1701
+      - set firewall name WAN_LOCAL rule 60 ipsec match-ipsec
+      - set firewall name WAN_LOCAL rule 60 log disable
+      - set firewall name WAN_LOCAL rule 60 protocol udp
+      - set vpn l2tp remote-access ipsec-settings authentication mode pre-shared-secret
+      - set vpn l2tp remote-access ipsec-settings authentication pre-shared-secret {{ ipsec_psk }}
+      - set vpn l2tp remote-access authentication mode local
+      - set vpn l2tp remote-access authentication local-users username {{ ipsec_username }} password {{ ipsec_user_pass }}
+      - set vpn l2tp remote-access client-ip-pool start {{ client_ip_pool_start }}
+      - set vpn l2tp remote-access client-ip-pool stop {{ client_ip_pool_stop }}
+      - set vpn l2tp remote-access dns-servers server-1 {{ ext_dns1 }}
+      - set vpn l2tp remote-access dns-servers server-2 {{ ext_dns2 }}
+      - set vpn l2tp remote-access mtu 1400
+      - set vpn l2tp remote-access dhcp-interface {{ wan_interface }}
+      - set vpn ipsec ipsec-interfaces interface {{ wan_interface }}
+  

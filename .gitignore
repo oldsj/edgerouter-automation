@@ -1,6 +1,6 @@
-variables.yml
-!examples/*
+*.retry
 .vscode/
+
 # Compiled source #
 ###################
 *.com
