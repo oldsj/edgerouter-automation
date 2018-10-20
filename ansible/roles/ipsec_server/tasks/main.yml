@@ -32,4 +32,3 @@
       - set vpn l2tp remote-access mtu 1400
       - set vpn l2tp remote-access dhcp-interface {{ wan_interface }}
       - set vpn ipsec ipsec-interfaces interface {{ wan_interface }}
-  
