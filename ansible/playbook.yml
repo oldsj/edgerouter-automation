@@ -1,6 +1,4 @@
 - hosts: er01
 
   roles:
-    - wireguard_client
-    - ipsec_server
     - aws_vpg

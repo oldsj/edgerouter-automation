@@ -14,6 +14,6 @@ resource "aws_security_group" "allow_cgw_lan" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["192.168.7.0/24"]
+    cidr_blocks = ["${var.customer_gateway_lan}"]
   }
 }

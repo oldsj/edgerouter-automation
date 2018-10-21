@@ -8,3 +8,8 @@ variable "customer_gateway_asn" {
   description = "BGP ASN of the customer gateway"
   default     = "65000"  
 }
+
+variable "customer_gateway_lan" {
+  type        = "string"
+  description = "The LAN CIDR behind the customer gateway"
+}
