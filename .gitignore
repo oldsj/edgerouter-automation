@@ -1,5 +1,7 @@
 *.retry
 .vscode/
+.terraform/
+terraform.tfstate*
 
 # Compiled source #
 ###################

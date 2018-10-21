@@ -1,0 +1,3 @@
+#!/bin/bash
+export ANSIBLE_PERSISTENT_COMMAND_TIMEOUT=30
+ansible-playbook playbook.yml -i hosts.yml --vault-password-file ~/.vault_pw

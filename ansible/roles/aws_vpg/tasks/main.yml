@@ -1,0 +1,39 @@
+- name: configure aws vpn connection
+  edgeos_config:
+    lines:
+      - set vpn ipsec auto-firewall-nat-exclude enable
+      - set vpn ipsec ike-group FOO0 key-exchange ikev1
+      - set vpn ipsec ike-group FOO0 lifetime 28800
+      - set vpn ipsec ike-group FOO0 proposal 1 dh-group 2
+      - set vpn ipsec ike-group FOO0 proposal 1 encryption aes128
+      - set vpn ipsec ike-group FOO0 proposal 1 hash sha1
+      - set vpn ipsec ike-group FOO0 dead-peer-detection action restart
+      - set vpn ipsec ike-group FOO0 dead-peer-detection interval 15
+      - set vpn ipsec ike-group FOO0 dead-peer-detection timeout 30
+      - set vpn ipsec esp-group FOO0 lifetime 3600
+      - set vpn ipsec esp-group FOO0 pfs enable
+      - set vpn ipsec esp-group FOO0 proposal 1 encryption aes128
+      - set vpn ipsec esp-group FOO0 proposal 1 hash sha1
+      - set interfaces vti vti0 address {{ tunnel1_cgw_inside_address }}/30
+      - set interfaces vti vti1 address {{ tunnel2_cgw_inside_address }}/30
+      - set vpn ipsec site-to-site peer {{ tunnel1_address }} authentication mode pre-shared-secret
+      - set vpn ipsec site-to-site peer {{ tunnel1_address }} authentication pre-shared-secret {{ tunnel1_preshared_key }}
+      - set vpn ipsec site-to-site peer {{ tunnel1_address }} connection-type initiate
+      - set vpn ipsec site-to-site peer {{ tunnel1_address }} description IPsecAWS
+      - set vpn ipsec site-to-site peer {{ tunnel1_address }} local-address {{ wan_ip }}
+      - set vpn ipsec site-to-site peer {{ tunnel1_address }} ike-group FOO0
+      - set vpn ipsec site-to-site peer {{ tunnel1_address }} vti bind vti0
+      - set vpn ipsec site-to-site peer {{ tunnel1_address }} vti esp-group FOO0
+      - set vpn ipsec site-to-site peer {{ tunnel2_address }} authentication mode pre-shared-secret
+      - set vpn ipsec site-to-site peer {{ tunnel2_address }} authentication pre-shared-secret {{ tunnel2_preshared_key }}
+      - set vpn ipsec site-to-site peer {{ tunnel2_address }} connection-type initiate
+      - set vpn ipsec site-to-site peer {{ tunnel2_address }} description IPsecAWS
+      - set vpn ipsec site-to-site peer {{ tunnel2_address }} local-address {{ wan_ip }}
+      - set vpn ipsec site-to-site peer {{ tunnel2_address }} ike-group FOO0
+      - set vpn ipsec site-to-site peer {{ tunnel2_address }} vti bind vti1
+      - set vpn ipsec site-to-site peer {{ tunnel2_address }} vti esp-group FOO0
+      - set firewall options mss-clamp interface-type vti
+      - set firewall options mss-clamp mss 1379
+- name: configure aws bgp
+  edgeos_config:
+    lines:
