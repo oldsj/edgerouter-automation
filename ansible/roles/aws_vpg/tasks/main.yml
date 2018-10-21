@@ -34,6 +34,14 @@
       - set vpn ipsec site-to-site peer {{ tunnel2_address }} vti esp-group FOO0
       - set firewall options mss-clamp interface-type vti
       - set firewall options mss-clamp mss 1379
-- name: configure aws bgp
+- name: configure aws bgp peering
   edgeos_config:
     lines:
+      - set protocols bgp 65000 parameters router-id {{ wan_ip }}
+      - set protocols bgp 65000 neighbor {{ tunnel1_vgw_inside_address }} remote-as {{ tunnel1_bgp_asn }}
+      - set protocols bgp 65000 neighbor {{ tunnel1_vgw_inside_address }} soft-reconfiguration 'inbound'
+      - set protocols bgp 65000 neighbor {{ tunnel1_vgw_inside_address }} timers holdtime {{ tunnel1_bgp_holdtime }}
+      - set protocols bgp 65000 neighbor {{ tunnel2_vgw_inside_address }} remote-as {{ tunnel2_bgp_asn }}
+      - set protocols bgp 65000 neighbor {{ tunnel2_vgw_inside_address }} soft-reconfiguration 'inbound'
+      - set protocols bgp 65000 neighbor {{ tunnel2_vgw_inside_address }} timers holdtime {{ tunnel2_bgp_holdtime }}
+      - set protocols bgp 65000 network 0.0.0.0/0
