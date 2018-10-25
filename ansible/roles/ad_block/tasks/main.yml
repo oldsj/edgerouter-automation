@@ -1,0 +1,23 @@
+- name: Transfer update-adblock-dnsmasq.sh
+  copy:
+    src: update-adblock-dnsmasq.sh
+    dest: /config/user-data/update-adblock-dnsmasq.sh
+    mode: 0755
+  become: yes
+  vars:
+    ansible_connection: paramiko
+
+- name: Run adblock script
+  command: /bin/vbash /config/user-data/update-adblock-dnsmasq.sh
+  become: yes
+  vars:
+    ansible_connection: paramiko
+
+- name: Configure block list automatic updates
+  cron:
+    name: "update ad block lists"
+    special_time: weekly
+    job: "/config/user-data/update-adblock-dnsmasq.sh"
+  become: yes
+  vars:
+    ansible_connection: paramiko
